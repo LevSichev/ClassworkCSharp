@@ -41,9 +41,12 @@ namespace ClassworkCSharp
         {
             using (FileStream fs = new FileStream($"{filename}.txt", FileMode.Open))
             using (BinaryReader file = new BinaryReader(fs, Encoding.UTF8))
-            {
-                foreach (char c in file.ReadBytes((int)fs.Length))
-                    Console.Write(c);
+            { 
+                for (int i = 0; i < fs.Length; i++)
+                {
+                    Console.Write(file.ReadChar());
+                }
+                //Console.WriteLine(file.ReadString()); //System.IO.EndOfStreamException: "Unable to read beyond the end of the stream."
             }
 
         }
@@ -52,3 +55,4 @@ namespace ClassworkCSharp
 
         }
     }
+}
