@@ -16,26 +16,26 @@ namespace ClassworkCSharp
          
         public int rowsCountInt      { get; set; }
         public int columnsCountInt   { get; set; }
-        public int rowsCountFloat    { get; set; }
-        public int columnsCountFloat { get; set; }
+        public int rowsCountDouble    { get; set; }
+        public int columnsCountDouble { get; set; }
          
-        public float[,] arrFloat { get; set; }
+        public double[,] arrDouble { get; set; }
         public int[,] arrInt { get; set; }
 
-        public TwoArraysAnalyzer(float[,] inputArrFloat, int[,] inputArrInt)
+        public TwoArraysAnalyzer(double[,] inputArrDouble, int[,] inputArrInt)
         {
-            rowsCountFloat = inputArrFloat.GetLength(1);
-            columnsCountFloat = inputArrFloat.GetLength(0);
+            rowsCountDouble = inputArrDouble.GetLength(1);
+            columnsCountDouble = inputArrDouble.GetLength(0);
             rowsCountInt = inputArrInt.GetLength(1);
             columnsCountInt = inputArrInt.GetLength(0);
 
-            arrFloat = new float[columnsCountFloat, rowsCountFloat];
+            arrDouble = new double[columnsCountDouble, rowsCountDouble];
             arrInt = new int[columnsCountInt, rowsCountInt];
 
-            for (int i = 0; i<columnsCountFloat; i++)
-                for (int j = 0; j<rowsCountFloat; j++)
+            for (int i = 0; i<columnsCountDouble; i++)
+                for (int j = 0; j<rowsCountDouble; j++)
                 {
-                    arrFloat[i, j] = inputArrFloat[i, j];
+                    arrDouble[i, j] = inputArrDouble[i, j];
                 }
             for (int i = 0; i <columnsCountInt ; i++)
                 for (int j = 0; j < rowsCountInt; j++)
@@ -46,12 +46,12 @@ namespace ClassworkCSharp
 
         public TwoArraysAnalyzer()
         {
-            rowsCountFloat = 1;
-            columnsCountFloat = 1;
+            rowsCountDouble = 1;
+            columnsCountDouble = 1;
             rowsCountInt = 1;
             columnsCountInt = 1;
 
-            arrFloat = new float[columnsCountFloat, rowsCountFloat];
+            arrDouble = new double[columnsCountDouble, rowsCountDouble];
             arrInt = new int[columnsCountInt, rowsCountInt];
         }
     }
@@ -62,9 +62,9 @@ namespace ClassworkCSharp
         static void Main(string[] args)
         {
             const string FILE_NAME = "Day17_WIP";
-            int arrsizeintx, arrsizeinty, arrsizefloatx, arrsizefloaty;
+            int arrsizeintx, arrsizeinty, arrsizedoublex, arrsizedoubley;
             int[,] inputArrInt;
-            float[,] inputArrFloat;
+            double[,] inputArrDouble;
             TwoArraysAnalyzer arraysAnalyzer = new TwoArraysAnalyzer();
             //read the sizes and arrays and then shove them into the analyzer???
             //TaskReadFile() must read sizes of arrays, then the arrays themselves, i guess
@@ -80,13 +80,13 @@ namespace ClassworkCSharp
             //{
                 Random rng = new Random();
 
-                arrsizefloatx = rng.Next(1, 5);
-                arrsizefloaty = rng.Next(1, 5);
+                arrsizedoublex = rng.Next(1, 5);
+                arrsizedoubley = rng.Next(1, 5);
                 arrsizeintx = rng.Next(1, 5);
                 arrsizeinty = rng.Next(1, 5);
 
                 inputArrInt = new int[arrsizeintx, arrsizeinty];
-                inputArrFloat = new float[arrsizefloatx, arrsizefloaty];
+                inputArrDouble = new double[arrsizedoublex, arrsizedoubley];
 
                 for (int i = 0; i<arrsizeintx; i++)
                 {
@@ -95,19 +95,19 @@ namespace ClassworkCSharp
                         inputArrInt[i, j] = rng.Next(0,10);
                     }
                 }
-                for (int i = 0; i<arrsizefloatx; i++)
+                for (int i = 0; i<arrsizedoublex; i++)
                 {
-                    for (int j = 0; j< arrsizefloaty; j++)
+                    for (int j = 0; j< arrsizedoubley; j++)
                     {
-                        inputArrFloat[i, j] = rng.Next(0,10);
+                        inputArrDouble[i, j] = rng.Next(0,10);
                     }
                 }
             //}
-
-            arraysAnalyzer = new TwoArraysAnalyzer(inputArrFloat, inputArrInt);
+            arraysAnalyzer = new TwoArraysAnalyzer(inputArrDouble, inputArrInt);
 
             Task1WriteIntoFile(FILE_NAME, arraysAnalyzer);
 
+            Task1ReadFile(FILE_NAME, ref arraysAnalyzer);
             Console.ReadKey();
         } 
 
@@ -137,12 +137,38 @@ namespace ClassworkCSharp
             }
             using (FileStream fs = new FileStream($"{filename}.txt", FileMode.Open))
             using (BinaryReader file = new BinaryReader(fs, Encoding.UTF8))
-            { 
-                for (int i = 0; i < fs.Length; i++)
+            {
+                //for (int i = 0; i < fs.Length; i++)
+                //{
+                //    Console.Write(file.ReadChar());
+                //}
+
+                Console.Write(file.ReadString());
+                Console.Write(file.ReadString());
+                Console.Write(file.ReadString());
+                file.ReadChar();
+                int intsizex = file.ReadInt32();
+                Console.Write(file.ReadInt32());
+                Console.Write(" ");
+                int intsizey = file.ReadInt32();
+                Console.Write(file.ReadInt32());
+                for (int i = 0; i < intsizex; i++)
                 {
+                    for (int j = 0; j < intsizey; j++)
+                        Console.Write(file.ReadInt32());
                     Console.Write(file.ReadChar());
                 }
-                //Console.WriteLine(file.ReadString()); //System.IO.EndOfStreamException: "Unable to read beyond the end of the stream."
+                int doublesizex = file.ReadInt32();
+                Console.Write(file.ReadInt32());
+                Console.Write(" ");
+                int doublesizey = file.ReadInt32();
+                Console.Write(file.ReadInt32());
+                for (int i = 0; i < doublesizex; i++)
+                {
+                    for (int j = 0; j < doublesizey; j++)
+                        Console.Write(file.ReadInt32());
+                    Console.Write(file.ReadChar());
+                }
             }
 
         }
@@ -152,32 +178,48 @@ namespace ClassworkCSharp
             using (BinaryWriter file = new BinaryWriter(fs,Encoding.UTF8))
             {
                 file.Write(twoArraysData.name);
+                Console.Write(twoArraysData.name);
                 file.Write(twoArraysData.surname);
+                Console.Write(twoArraysData.surname);
                 file.Write(twoArraysData.lastname);
-                file.Write('\n');
-                file.Write(twoArraysData.rowsCountFloat);
-                file.Write(twoArraysData.columnsCountFloat);
-                for (int i = 0; i < twoArraysData.columnsCountFloat; i++)
+                Console.Write(twoArraysData.lastname);
+                Console.Write('\n');
+                file.Write(twoArraysData.rowsCountDouble);
+                Console.Write(twoArraysData.rowsCountDouble);
+                file.Write(twoArraysData.columnsCountDouble);
+                Console.Write(twoArraysData.columnsCountDouble);
+                Console.Write('\n');
+                for (int i = 0; i < twoArraysData.columnsCountDouble; i++)
                 {
-                    for (int j = 0; j<twoArraysData.rowsCountFloat; j++)
+                    for (int j = 0; j<twoArraysData.rowsCountDouble; j++)
                     {
-                        file.Write(twoArraysData.arrFloat[i, j]);
+                        file.Write(twoArraysData.arrDouble[i, j]);
+                        Console.Write(twoArraysData.arrDouble[i, j]);
                     }
                     file.Write('\n');
+                    Console.Write('\n');
                 }
                 file.Write(twoArraysData.rowsCountInt);
+                Console.Write(twoArraysData.rowsCountInt);
                 file.Write(twoArraysData.columnsCountInt);
+                Console.Write(twoArraysData.columnsCountInt);
+                Console.Write('\n');
                 for (int i = 0; i < twoArraysData.columnsCountInt; i++)
                 {
                     for (int j = 0; j < twoArraysData.rowsCountInt; j++)
                     {
                         file.Write(twoArraysData.arrInt[i, j]);
+                        Console.Write(twoArraysData.arrInt[i, j]);
                     }
                     file.Write('\n');
+                    Console.Write('\n');
                 }
                 file.Write(DateTime.Now.Day);
+                Console.Write(DateTime.Now.Day);
                 file.Write(DateTime.Now.Month);
+                Console.Write(DateTime.Now.Month);
                 file.Write(DateTime.Now.Year);
+                Console.Write(DateTime.Now.Year);
             }
         }
     }
